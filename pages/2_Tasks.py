@@ -1,0 +1,131 @@
+import streamlit as st
+import sqlite3
+import pandas as pd
+
+st.title("📝 Task Management")
+
+conn = sqlite3.connect("studyplanner.db")
+
+subjects = pd.read_sql_query(
+    "SELECT name FROM subjects",
+    conn
+)
+
+subject_list = subjects["name"].tolist()
+
+subject = st.selectbox(
+    "Subject",
+    subject_list
+)
+
+task_name = st.text_input("Task Name")
+
+task_type = st.selectbox(
+    "Task Type",
+    ["Exam", "Assignment", "Revision"]
+)
+
+deadline = st.date_input("Deadline")
+
+if st.button("Add Task"):
+
+    cur = conn.cursor()
+
+    cur.execute("""
+    INSERT INTO tasks
+    (subject,task_name,deadline,status)
+    VALUES (?,?,?,?)
+    """,
+    (
+        subject,
+        f"{task_type}: {task_name}",
+        str(deadline),
+        "Pending"
+    ))
+
+    conn.commit()
+
+    st.success("Task Added")
+
+df = pd.read_sql_query(
+    "SELECT * FROM tasks",
+    conn
+)
+
+st.subheader("All Tasks")
+
+st.dataframe(df, use_container_width=True)
+st.subheader("Mark Task Complete")
+
+task_ids = df["id"].tolist()
+
+if task_ids:
+
+    selected_task = st.selectbox(
+        "Select Task ID",
+        task_ids
+    )
+
+    if st.button("Complete Task"):
+
+        conn = sqlite3.connect(
+            "studyplanner.db"
+        )
+
+        cur = conn.cursor()
+
+        cur.execute(
+            """
+            UPDATE tasks
+            SET status='Completed'
+            WHERE id=?
+            """,
+            (selected_task,)
+        )
+
+        conn.commit()
+        conn.close()
+
+        st.success(
+            "Task Completed"
+        )
+
+        st.rerun()
+
+st.subheader("🗑 Delete Task")
+
+task_ids_delete = df["id"].tolist()
+
+if task_ids_delete:
+
+    delete_task = st.selectbox(
+        "Select Task ID to Delete",
+        task_ids_delete
+    )
+
+    if st.button("Delete Task"):
+
+        conn = sqlite3.connect(
+            "studyplanner.db"
+        )
+
+        cur = conn.cursor()
+
+        cur.execute(
+            """
+            DELETE FROM tasks
+            WHERE id=?
+            """,
+            (delete_task,)
+        )
+
+        conn.commit()
+        conn.close()
+
+        st.success(
+            "Task Deleted"
+        )
+
+        st.rerun()
+
+conn.close()
