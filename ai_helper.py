@@ -1,30 +1,39 @@
-import requests
+import streamlit as st
+import google.generativeai as genai
+import os
+
+api_key = os.getenv("GEMINI_API_KEY")
+
+if not api_key:
+    try:
+        api_key = st.secrets["GEMINI_API_KEY"]
+    except Exception:
+        api_key = None
+
+if not api_key:
+    raise ValueError("GEMINI_API_KEY not found.")
+
+genai.configure(api_key=api_key)
+
+model = genai.GenerativeModel("gemini-2.5-flash")
 
 def ask_ai(question):
 
     prompt = f"""
 You are a study planner assistant.
 
-Your job is to help students prepare for exams.
+Help students prepare for exams.
 
-When answering:
-- Give study advice
-- Mention important topics
-- Suggest a study plan
-- Give revision tips
-- Keep answers practical
+Give:
+- Important topics
+- Study plan
+- Revision strategy
+- Practical advice
 
-Student Question:
+Question:
 {question}
 """
 
-    response = requests.post(
-        "http://localhost:11434/api/generate",
-        json={
-            "model":"llama3.2",
-            "prompt":prompt,
-            "stream":False
-        }
-    )
+    response = model.generate_content(prompt)
 
-    return response.json()["response"]
+    return response.text
