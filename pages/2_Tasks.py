@@ -1,8 +1,12 @@
 import streamlit as st
 import sqlite3
 import pandas as pd
+from translations import translations
 
-st.title("📝 Task Management")
+language = st.session_state.get("language", "English")
+t = translations[language]
+
+st.title("📝 " + t["tasks"])
 
 conn = sqlite3.connect("studyplanner.db")
 
@@ -14,20 +18,22 @@ subjects = pd.read_sql_query(
 subject_list = subjects["name"].tolist()
 
 subject = st.selectbox(
-    "Subject",
+    t["subject_name"],
     subject_list
 )
 
-task_name = st.text_input("Task Name")
+task_name = st.text_input(t["task_name"])
 
 task_type = st.selectbox(
-    "Task Type",
+    t["task_type"],
     ["Exam", "Assignment", "Revision"]
 )
 
-deadline = st.date_input("Deadline")
+deadline = st.date_input(
+    t["deadline"]
+)
 
-if st.button("Add Task"):
+if st.button(t["add_task"]):
 
     cur = conn.cursor()
 
@@ -45,16 +51,17 @@ if st.button("Add Task"):
 
     conn.commit()
 
-    st.success("Task Added")
+    st.success(t["add_task"])
 
 df = pd.read_sql_query(
     "SELECT * FROM tasks",
     conn
 )
 
-st.subheader("All Tasks")
+st.subheader(t["all_tasks"])
 
 st.dataframe(df, use_container_width=True)
+
 st.subheader("Mark Task Complete")
 
 task_ids = df["id"].tolist()
@@ -92,7 +99,7 @@ if task_ids:
 
         st.rerun()
 
-st.subheader("🗑 Delete Task")
+st.subheader("Delete Task")
 
 task_ids_delete = df["id"].tolist()
 

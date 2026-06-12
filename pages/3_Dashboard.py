@@ -2,9 +2,12 @@ import streamlit as st
 import sqlite3
 import pandas as pd
 import plotly.express as px
+from translations import translations
+from language import tr
 
-st.title("📊 Dashboard")
+t = translations[st.session_state.language]
 
+st.title("📊 " + tr("dashboard"))
 conn = sqlite3.connect("studyplanner.db")
 
 subjects = pd.read_sql_query(
@@ -34,23 +37,23 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.metric(
-        "Subjects",
+        tr("subjects"),
         total_subjects
     )
 
     st.metric(
-        "Completed Tasks",
+        tr("completed_tasks"),
         completed_tasks
     )
 
 with col2:
     st.metric(
-        "Total Tasks",
+        tr("total_tasks"),
         total_tasks
     )
 
     st.metric(
-        "Pending Tasks",
+        tr("pending_tasks"),
         pending_tasks
     )
 
@@ -58,7 +61,7 @@ if total_tasks > 0:
 
     progress = completed_tasks / total_tasks
 
-    st.subheader("Overall Progress")
+    st.subheader(tr("overall_progress"))
 
     st.progress(progress)
 
@@ -66,11 +69,11 @@ if total_tasks > 0:
         f"{progress * 100:.1f}% Complete"
     )
 
-st.subheader("Task Overview")
+st.subheader(tr("task_overview"))
 
 st.dataframe(tasks, use_container_width=True)
 
-st.subheader("Task Status Distribution")
+st.subheader(tr("task_status_distribution"))
 
 status_counts = (
     tasks["status"]
@@ -111,7 +114,7 @@ if not pending.empty:
         f"{nearest_task['task_name']} "
         f" ({nearest_task['deadline']})"
     )
-st.subheader("📚 Subject-wise Workload")
+st.subheader("📚 " + tr("subject_wise_workload"))
 
 subject_counts = (
     tasks["subject"]

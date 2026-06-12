@@ -1,19 +1,23 @@
 import streamlit as st
 import sqlite3
 import pandas as pd
+from translations import translations
 
-st.title("📚 Subject Management")
+language = st.session_state.get("language", "English")
+t = translations[language]
 
-subject = st.text_input("Subject Name")
+st.title("📚 " + t["subjects"])
+
+subject = st.text_input(t["subject_name"])
 
 difficulty = st.slider(
-    "Difficulty",
+    t["difficulty"],
     1,
     5,
     3
 )
 
-if st.button("Add Subject"):
+if st.button(t["add_subject"]):
 
     conn = sqlite3.connect("studyplanner.db")
     cur = conn.cursor()
@@ -26,7 +30,7 @@ if st.button("Add Subject"):
     conn.commit()
     conn.close()
 
-    st.success("Subject Added")
+    st.success(t["add_subject"])
 
 conn = sqlite3.connect("studyplanner.db")
 
@@ -37,6 +41,6 @@ df = pd.read_sql_query(
 
 conn.close()
 
-st.subheader("All Subjects")
+st.subheader(t["all_subjects"])
 
 st.dataframe(df, use_container_width=True)

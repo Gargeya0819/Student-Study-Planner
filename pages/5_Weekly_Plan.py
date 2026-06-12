@@ -2,11 +2,12 @@ import streamlit as st
 import sqlite3
 import pandas as pd
 from scheduler import generate_schedule
+from language import tr
 
-st.title("📅 Weekly Study Planner")
+st.title("📅 " + tr("weekly_study_planner"))
 
 study_hours = st.number_input(
-    "Study Hours Per Day",
+    tr("study_hours_per_day"),
     min_value=1,
     max_value=12,
     value=3
@@ -35,7 +36,7 @@ tasks = pd.read_sql_query(
 
 conn.close()
 
-if st.button("Generate Weekly Plan"):
+if st.button(tr("generate_weekly_plan")):
 
     task_list = tasks.to_dict(
         orient="records"
@@ -46,15 +47,14 @@ if st.button("Generate Weekly Plan"):
         study_hours
     )
 
-    st.subheader("Weekly Schedule")
+    st.subheader(tr("weekly_schedule"))
 
-    for i, day in enumerate(days):
+    for day in days:
 
         st.markdown(f"### {day}")
 
         for task in schedule:
 
             st.info(
-    f"{task['subject']} → "
-    f"{task['hours']} hrs"
-)
+                f"{task['subject']} → {task['hours']} hrs"
+            )

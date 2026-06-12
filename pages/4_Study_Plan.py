@@ -3,11 +3,12 @@ import sqlite3
 import pandas as pd
 
 from scheduler import generate_schedule
+from language import tr
 
-st.title("📅 Study Plan Generator")
+st.title("📅 " + tr("study_plan_generator"))
 
 study_hours = st.number_input(
-    "Available Study Hours Per Day",
+    tr("available_study_hours"),
     min_value=1,
     max_value=12,
     value=3
@@ -26,7 +27,7 @@ tasks = pd.read_sql_query(
 
 conn.close()
 
-if st.button("Generate Plan"):
+if st.button(tr("generate_plan")):
 
     task_list = tasks.to_dict(
         orient="records"
@@ -37,7 +38,7 @@ if st.button("Generate Plan"):
         study_hours
     )
 
-    st.subheader("Today's Study Plan")
+    st.subheader(tr("today_study_plan"))
 
     st.dataframe(
         pd.DataFrame(schedule),
