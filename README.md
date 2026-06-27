@@ -209,6 +209,44 @@ https://github.com/Gargeya0819/Student-Study-Planner
 
 ---
 
+---
+
+## Screenshots
+
+Add screenshots of:
+- Dashboard
+- Subject Management
+- AI Assistant
+
+---
+
+## Architecture
+
+- Frontend: Streamlit
+- Backend: Python
+- Database: SQLite
+- AI: Google Gemini API
+
+---
+
+## Environment Variables
+
+Create a `.streamlit/secrets.toml` file:
+
+```toml
+GEMINI_API_KEY="your_api_key"  # pragma: allowlist secret
+```
+
+---
+
+## License
+
+This project is licensed under the AGPL-3.0 License.
+
+See LICENSE for details.
+
+---
+
 ## Conclusion
 
 Student Study Planner provides an easy and effective way for students to manage subjects, assignments, deadlines, and study schedules. Through automated planning, progress analytics, multilingual support, and AI-powered assistance, the application helps students stay organized and improve academic productivity.
