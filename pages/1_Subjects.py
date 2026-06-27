@@ -10,22 +10,19 @@ st.title("📚 " + t["subjects"])
 
 subject = st.text_input(t["subject_name"])
 
-difficulty = st.slider(
-    t["difficulty"],
-    1,
-    5,
-    3
-)
+difficulty = st.slider(t["difficulty"], 1, 5, 3)
 
 if st.button(t["add_subject"]):
-
     conn = sqlite3.connect("studyplanner.db")
     cur = conn.cursor()
 
-    cur.execute("""
+    cur.execute(
+        """
     INSERT INTO subjects(name,difficulty)
     VALUES (?,?)
-    """, (subject, difficulty))
+    """,
+        (subject, difficulty),
+    )
 
     conn.commit()
     conn.close()
@@ -34,10 +31,7 @@ if st.button(t["add_subject"]):
 
 conn = sqlite3.connect("studyplanner.db")
 
-df = pd.read_sql_query(
-    "SELECT * FROM subjects",
-    conn
-)
+df = pd.read_sql_query("SELECT * FROM subjects", conn)
 
 conn.close()
 

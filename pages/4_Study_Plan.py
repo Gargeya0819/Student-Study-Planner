@@ -8,10 +8,7 @@ from language import tr
 st.title("📅 " + tr("study_plan_generator"))
 
 study_hours = st.number_input(
-    tr("available_study_hours"),
-    min_value=1,
-    max_value=12,
-    value=3
+    tr("available_study_hours"), min_value=1, max_value=12, value=3
 )
 
 conn = sqlite3.connect("studyplanner.db")
@@ -22,25 +19,16 @@ tasks = pd.read_sql_query(
     FROM tasks
     WHERE status='Pending'
     """,
-    conn
+    conn,
 )
 
 conn.close()
 
 if st.button(tr("generate_plan")):
+    task_list = tasks.to_dict(orient="records")
 
-    task_list = tasks.to_dict(
-        orient="records"
-    )
-
-    schedule = generate_schedule(
-        task_list,
-        study_hours
-    )
+    schedule = generate_schedule(task_list, study_hours)
 
     st.subheader(tr("today_study_plan"))
 
-    st.dataframe(
-        pd.DataFrame(schedule),
-        use_container_width=True
-    )
+    st.dataframe(pd.DataFrame(schedule), use_container_width=True)

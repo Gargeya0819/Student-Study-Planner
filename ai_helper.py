@@ -17,6 +17,7 @@ genai.configure(api_key=api_key)
 
 model = genai.GenerativeModel("gemini-2.5-flash")
 
+
 def ask_ai(question):
 
     prompt = f"""

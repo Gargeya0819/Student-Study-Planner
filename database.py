@@ -1,5 +1,6 @@
 import sqlite3
 
+
 def initialize_database():
     conn = sqlite3.connect("studyplanner.db")
 
@@ -25,6 +26,7 @@ def initialize_database():
 
     conn.commit()
     conn.close()
+
 
 if __name__ == "__main__":
     initialize_database()

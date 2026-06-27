@@ -1,12 +1,10 @@
 from datetime import datetime
 
+
 def calculate_priority(deadline):
     today = datetime.now().date()
 
-    days_left = (
-        datetime.strptime(deadline, "%Y-%m-%d").date()
-        - today
-    ).days
+    days_left = (datetime.strptime(deadline, "%Y-%m-%d").date() - today).days
 
     if days_left <= 3:
         return 5
@@ -27,15 +25,10 @@ def generate_schedule(tasks, study_hours):
         total_priority += priority
 
     for task in tasks:
-        hours = round(
-            (task["priority"] / total_priority) * study_hours,
-            1
-        )
+        hours = round((task["priority"] / total_priority) * study_hours, 1)
 
-        schedule.append({
-            "subject": task["subject"],
-            "task": task["task_name"],
-            "hours": hours
-        })
+        schedule.append(
+            {"subject": task["subject"], "task": task["task_name"], "hours": hours}
+        )
 
     return schedule
